@@ -3,6 +3,7 @@ import { useEffect } from "react";
 import { useTodoState } from "../hooks/useTodoState";
 import { useTodoDispatch } from "../hooks/useTodoDispatch";
 import { TodoListItem } from "./TodoListItemComp";
+import APIHandler from '../api/api'
 
 export const TodoList = ({
   isCompleteScreen,
@@ -47,20 +48,52 @@ export const TodoList = ({
   useEffect(
     () => {
       console.log("초기로딩");
-      let savedTodo = localStorage.getItem("todolist") as string | null;
-      let savedCompletedTodo = localStorage.getItem("completedTodos") as
-        | string
-        | null;
-      savedTodo = savedTodo != null ? JSON.parse(savedTodo) : null;
-      savedCompletedTodo =
-        savedCompletedTodo != null ? JSON.parse(savedCompletedTodo) : null;
+      const API = new APIHandler();
 
-      if (savedTodo) {
-        dispatch({ type: "SET_INIT_TODOS", payload: savedTodo });
+      API.getTodos().then((data: any) => {
+        console.log(data);
+
+        let savedTodo = data.filter((data: any) => { return data.completedOn == "" || data.completedOn == undefined }) as Object | null;
+        let savedCompletedTodo = data.filter((data: any) => { return data.completedOn != "" && data.completedOn != undefined }) as Object | null;
+
+        if (savedTodo) {
+          dispatch({ type: "SET_INIT_TODOS", payload: savedTodo });
+        }
+        if (savedCompletedTodo) {
+          dispatch({ type: "SET_INIT_COMP_TODOS", payload: savedCompletedTodo });
+        }
+
+        // savedTodo = savedTodo != null ? JSON.parse(savedTodo) : null;
+        // savedCompletedTodo =
+        //   savedCompletedTodo != null ? JSON.parse(savedCompletedTodo) : null;
+
+        // if (savedTodo) {
+        //   dispatch({ type: "SET_INIT_TODOS", payload: savedTodo });
+        // }
+        // if (savedCompletedTodo) {
+        //   dispatch({ type: "SET_INIT_COMP_TODOS", payload: savedCompletedTodo });
+        // }
       }
-      if (savedCompletedTodo) {
-        dispatch({ type: "SET_INIT_COMP_TODOS", payload: savedCompletedTodo });
-      }
+
+      );
+
+      // let savedTodo = localStorage.getItem("todolist") as string | null;
+      // let savedCompletedTodo = localStorage.getItem("completedTodos") as
+      //   | string
+      //   | null;
+
+
+
+      // savedTodo = savedTodo != null ? JSON.parse(savedTodo) : null;
+      // savedCompletedTodo =
+      //   savedCompletedTodo != null ? JSON.parse(savedCompletedTodo) : null;
+
+      // if (savedTodo) {
+      //   dispatch({ type: "SET_INIT_TODOS", payload: savedTodo });
+      // }
+      // if (savedCompletedTodo) {
+      //   dispatch({ type: "SET_INIT_COMP_TODOS", payload: savedCompletedTodo });
+      // }
     },
     // eslint-disable-next-line
     []

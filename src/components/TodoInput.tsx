@@ -1,16 +1,24 @@
 import { useState } from "react";
 import { useTodoDispatch } from "../hooks/useTodoDispatch";
+import { v4 as uuidv4 } from 'uuid';
+import APIHandler from '../api/api'
 export const TodoInput = () => {
   const [newTitle, setNewTitle] = useState("");
   const [newDescription, setNewDescription] = useState("");
   const dispatch = useTodoDispatch();
-
-  const handleAddTodo = () => {
+  const API = new APIHandler();
+  const handleAddTodo = async () => {
     console.log("ddd");
+    // 새 UUID 생성
+    const uuid = uuidv4();
     let newTodoItem = {
+      id: uuid,
       title: newTitle,
       description: newDescription,
     };
+    await API.postTodo(newTodoItem);
+
+
     dispatch({ type: "SET_TODOS", payload: newTodoItem });
   };
 
