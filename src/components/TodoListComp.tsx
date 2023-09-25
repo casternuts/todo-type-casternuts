@@ -26,7 +26,7 @@ export const TodoList = ({
   //삭제(완료한일)
   const handleDeleteCompleteTodo = async (index: number) => {
     let filteredItem = {
-      ...state.allTodos[index],
+      ...state.completeTodos[index],
     };
     console.log(index);
     //api 전송
