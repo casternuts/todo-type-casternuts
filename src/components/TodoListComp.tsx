@@ -4,7 +4,7 @@ import { useTodoState } from "../hooks/useTodoState";
 import { useTodoDispatch } from "../hooks/useTodoDispatch";
 import { TodoListItem } from "./TodoListItemComp";
 import APIHandler from '../api/api'
-
+const API = new APIHandler();
 export const TodoList = ({
   isCompleteScreen,
 }: {
@@ -15,16 +15,26 @@ export const TodoList = ({
   const dispatch = useTodoDispatch();
 
   //삭제
-  const handleDeleteTodo = (index: number) => {
+  const handleDeleteTodo = async (index: number) => {
+    let filteredItem = {
+      ...state.allTodos[index],
+    };
+    console.log(filteredItem)
+    await API.deleteTodo(filteredItem.id);
     dispatch({ type: "DELETE_TODOS", payload: index });
   };
   //삭제(완료한일)
-  const handleDeleteCompleteTodo = (index: number) => {
+  const handleDeleteCompleteTodo = async (index: number) => {
+    let filteredItem = {
+      ...state.allTodos[index],
+    };
     console.log(index);
+    //api 전송
+    await API.deleteTodo(filteredItem.id);
     dispatch({ type: "DELETE_COMP_TODOS", payload: index });
   };
   //완료
-  const handleComplete = (index: number) => {
+  const handleComplete = async (index: number) => {
     console.log(index);
     let now = new Date();
     let dd = now.getDate();
@@ -39,6 +49,10 @@ export const TodoList = ({
       ...state.allTodos[index],
       completedOn: completedOn,
     };
+    console.log(filteredItem)
+
+    //api 전송
+    await API.putTodos(filteredItem);
     dispatch({ type: "SET_COMP_TODOS", payload: filteredItem });
 
     handleDeleteTodo(index);

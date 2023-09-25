@@ -1,6 +1,6 @@
 // 각 todo의 interface
 interface TodoItemInterface {
-  id: number
+  id: string
   title: string | null;
   description: string | null;
   completedOn?: string;

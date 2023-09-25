@@ -37,8 +37,8 @@ export default class APIHandler {
     }
 
     // TODO: 투두 검색 후 확인 완료
-    async putTodos({ id, completedOn }: { id: number; completedOn?: string }) {
-        const request = new APIRequest("PUT", `/kanban/cards/${id}`, {
+    async putTodos({ id, completedOn }: { id: string; completedOn?: string }) {
+        const request = new APIRequest("PUT", `/todos/todolist/${id}`, {
             completedOn: completedOn
         });
         await APIProcessor(request as Request);
@@ -48,8 +48,8 @@ export default class APIHandler {
 
 
     // TODO: ID로 카드 검색 후 삭제
-    async deleteTodo(id: number) {
-        const request = new APIRequest("DELETE", `/kanban/cards/${id}`);
+    async deleteTodo(id: string) {
+        const request = new APIRequest("DELETE", `/todos/todolist/${id}`);
         await APIProcessor(request as Request);
     }
 
